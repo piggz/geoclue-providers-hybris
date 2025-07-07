@@ -1,7 +1,7 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Copyright (C) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 - 2020 Jolla Ltd.
+    Copyright (c) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -29,6 +29,28 @@
 #include "gnss-binder-types.h"
 #include "locationtypes.h"
 
+enum HybrisApnIpTypeEnum {
+    HYBRIS_APN_IP_INVALID  = 0,
+    HYBRIS_APN_IP_IPV4     = 1,
+    HYBRIS_APN_IP_IPV6     = 2,
+    HYBRIS_APN_IP_IPV4V6   = 3
+};
+
+HybrisApnIpType fromContextProtocol(const QString &protocol);
+
+const void *geoclue_binder_gnss_decode_struct1(
+    GBinderReader *in,
+    guint size);
+
+#define geoclue_binder_gnss_decode_struct(type,in) \
+    ((const type*)geoclue_binder_gnss_decode_struct1(in, sizeof(type)))
+
+bool nmeaChecksumValid(const QByteArray &nmea);
+
+void parseRmc(const QByteArray &nmea);
+
+void processNmea(gint64 timestamp, const char *nmeaData);
+
 class BinderLocationBackend : public HybrisLocationBackend
 {
     Q_OBJECT
@@ -39,41 +61,42 @@ public:
     void dropGnss();
 
     // Gnss
-    bool gnssInit();
-    bool gnssStart();
-    bool gnssStop();
-    void gnssCleanup();
-    bool gnssInjectTime(HybrisGnssUtcTime timeMs, int64_t timeReferenceMs, int32_t uncertaintyMs);
-    bool gnssInjectLocation(double latitudeDegrees, double longitudeDegrees, float accuracyMeters);
-    void gnssDeleteAidingData(HybrisGnssAidingData aidingDataFlags);
-    bool gnssSetPositionMode(HybrisGnssPositionMode mode, HybrisGnssPositionRecurrence recurrence,
-                             uint32_t minIntervalMs, uint32_t preferredAccuracyMeters,
-                             uint32_t preferredTimeMs);
+    virtual bool gnssInit() = 0;
+    virtual bool gnssStart() = 0;
+    virtual bool gnssStop() = 0;
+    virtual void gnssCleanup() = 0;
+    virtual bool gnssInjectTime(HybrisGnssUtcTime timeMs, int64_t timeReferenceMs, int32_t uncertaintyMs) = 0;
+    virtual bool gnssInjectLocation(int timestamp, double latitudeDegrees, double longitudeDegrees, float accuracyMeters) = 0;
+    virtual void gnssDeleteAidingData(HybrisGnssAidingData aidingDataFlags) = 0;
+    virtual bool gnssSetPositionMode(HybrisGnssPositionMode mode, HybrisGnssPositionRecurrence recurrence,
+                                     uint32_t minIntervalMs, uint32_t preferredAccuracyMeters,
+                                     uint32_t preferredTimeMs) = 0;
 
     // GnssDebug
-    void gnssDebugInit();
+    virtual void gnssDebugInit() = 0;
 
     // GnnNi
-    void gnssNiInit();
-    void gnssNiRespond(int32_t notifId, HybrisGnssUserResponseType userResponse);
+    virtual void gnssNiInit() = 0;
+    virtual void gnssNiRespond(int32_t notifId, HybrisGnssUserResponseType userResponse) = 0;
 
     // GnssXtra
-    void gnssXtraInit();
-    bool gnssXtraInjectXtraData(QByteArray &xtraData);
+    virtual void gnssXtraInit() = 0;
+    virtual bool gnssXtraInjectXtraData(QByteArray &xtraData) = 0;
 
     // AGnss
-    void aGnssInit();
-    bool aGnssDataConnClosed();
-    bool aGnssDataConnFailed();
-    bool aGnssDataConnOpen(const QByteArray &apn, const QString &protocol);
-    int aGnssSetServer(HybrisAGnssType type, const char* hostname, int port);
+    virtual void aGnssInit() = 0;
+    virtual bool aGnssDataConnClosed() = 0;
+    virtual bool aGnssDataConnFailed() = 0;
+    virtual bool aGnssDataConnOpen(const QByteArray &apn, const QString &protocol) = 0;
+    virtual int aGnssSetServer(HybrisAGnssType type, const char* hostname, int port) = 0;
 
     // AGnssRil
-    void aGnssRilInit();
+    virtual void aGnssRilInit() = 0;
 
-private:
-    bool isReplySuccess(GBinderRemoteReply *reply);
-    GBinderRemoteObject *getExtensionObject(GBinderRemoteReply *reply);
+protected:
+    GBinderRemoteObject *getExtensionObject(GBinderRemoteReply *reply,
+                                            bool allowNull = false);
+    virtual bool isReplySuccess(GBinderRemoteReply *reply) = 0;
 
     gulong m_death_id;
     char *m_fqname;

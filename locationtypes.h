@@ -1,6 +1,5 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 - 2024 Jolla Ltd.
 
     This file is part of geoclue-hybris.
 

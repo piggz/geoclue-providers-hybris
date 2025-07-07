@@ -1,7 +1,7 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Copyright (C) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 Jolla Ltd.
+    Copyright (c) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -91,6 +91,8 @@ enum {
 enum {
     HYBRIS_AGNSS_TYPE_SUPL = 1,
     HYBRIS_AGNSS_TYPE_C2K = 2,
+    HYBRIS_AGNSS_TYPE_SUPL_EIMS = 3,
+    HYBRIS_AGNSS_TYPE_SUPL_IMS = 4,
 };
 
 enum {
@@ -114,7 +116,7 @@ public:
     virtual bool gnssStop() = 0;
     virtual void gnssCleanup() = 0;
     virtual bool gnssInjectTime(HybrisGnssUtcTime timeMs, int64_t timeReferenceMs, int32_t uncertaintyMs) = 0;
-    virtual bool gnssInjectLocation(double latitudeDegrees, double longitudeDegrees, float accuracyMeters) = 0;
+    virtual bool gnssInjectLocation(int timestamp, double latitudeDegrees, double longitudeDegrees, float accuracyMeters) = 0;
     virtual void gnssDeleteAidingData(HybrisGnssAidingData aidingDataFlags) = 0;
     virtual bool gnssSetPositionMode(HybrisGnssPositionMode mode, HybrisGnssPositionRecurrence recurrence,
                                      uint32_t minIntervalMs, uint32_t preferredAccuracyMeters,
