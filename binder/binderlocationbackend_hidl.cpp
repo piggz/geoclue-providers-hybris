@@ -938,6 +938,9 @@ bool BinderLocationBackendHidl::aGnssDataConnClosed()
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection closed failed");
+    }
     gbinder_remote_reply_unref(reply);
     return ret;
 }
@@ -955,6 +958,9 @@ bool BinderLocationBackendHidl::aGnssDataConnFailed()
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection failed");
+    }
     gbinder_remote_reply_unref(reply);
     return ret;
 }
@@ -981,6 +987,9 @@ bool BinderLocationBackendHidl::aGnssDataConnOpen(
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection open failed");
+    }
     gbinder_local_request_unref(req);
     gbinder_remote_reply_unref(reply);
 
