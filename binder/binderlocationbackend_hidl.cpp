@@ -931,6 +931,10 @@ bool BinderLocationBackendHidl::aGnssDataConnClosed()
     bool ret = false;
     GBinderRemoteReply *reply;
 
+    if (!m_clientAGnss) {
+        return ret;
+    }
+
     reply = gbinder_client_transact_sync_reply(m_clientAGnss,
         AGNSS_DATA_CONN_CLOSED, Q_NULLPTR, &status);
 
@@ -950,6 +954,10 @@ bool BinderLocationBackendHidl::aGnssDataConnFailed()
     int status = 0;
     bool ret = false;
     GBinderRemoteReply *reply;
+
+    if (!m_clientAGnss) {
+        return ret;
+    }
 
     reply = gbinder_client_transact_sync_reply(m_clientAGnss,
         AGNSS_DATA_CONN_FAILED, Q_NULLPTR, &status);
@@ -974,6 +982,10 @@ bool BinderLocationBackendHidl::aGnssDataConnOpen(
     GBinderLocalRequest *req;
     GBinderRemoteReply *reply;
     GBinderWriter writer;
+
+    if (!m_clientAGnss) {
+        return ret;
+    }
 
     req = gbinder_client_new_request(m_clientAGnss);
 
@@ -1006,6 +1018,10 @@ int BinderLocationBackendHidl::aGnssSetServer(
     GBinderLocalRequest *req;
     GBinderRemoteReply *reply;
     GBinderWriter writer;
+
+    if (!m_clientAGnss) {
+        return ret;
+    }
 
     req = gbinder_client_new_request(m_clientAGnss);
 
