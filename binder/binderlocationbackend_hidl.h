@@ -66,6 +66,12 @@ public:
 
 protected:
     bool isReplySuccess(GBinderRemoteReply *reply);
+
+private:
+    bool gnssInitInternal(const char *remote,
+                          gint32 set_callback,
+                          GnssInterface gnssInterface);
+    GnssInterface m_gnssInterface;
 };
 
 #endif // BINDERLOCATIONBACKEND_HIDL_H

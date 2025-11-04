@@ -245,13 +245,13 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
                 int prn = svInfo.svid;
                 // From https://github.com/barbeau/gpstest
                 // and https://github.com/mvglasow/satstat/wiki/NMEA-IDs
-                if (svInfo.constellation == GnssAidlConstellationType::SBAS) {
+                if (svInfo.constellation == GnssConstellationType::SBAS) {
                     prn -= 87;
-                } else if (svInfo.constellation == GnssAidlConstellationType::GLONASS) {
+                } else if (svInfo.constellation == GnssConstellationType::GLONASS) {
                     prn += 64;
-                } else if (svInfo.constellation == GnssAidlConstellationType::BEIDOU) {
+                } else if (svInfo.constellation == GnssConstellationType::BEIDOU) {
                     prn += 200;
-                } else if (svInfo.constellation == GnssAidlConstellationType::GALILEO) {
+                } else if (svInfo.constellation == GnssConstellationType::GALILEO) {
                     prn += 300;
                 }
 
