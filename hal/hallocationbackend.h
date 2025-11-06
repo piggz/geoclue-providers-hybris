@@ -1,6 +1,6 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 - 2020 Jolla Ltd.
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -42,7 +42,7 @@ public:
     bool gnssStop();
     void gnssCleanup();
     bool gnssInjectTime(HybrisGnssUtcTime timeMs, int64_t timeReferenceMs, int32_t uncertaintyMs);
-    bool gnssInjectLocation(double latitudeDegrees, double longitudeDegrees, float accuracyMeters);
+    bool gnssInjectLocation(int timestamp, double latitudeDegrees, double longitudeDegrees, float accuracyMeters);
     void gnssDeleteAidingData(HybrisGnssAidingData aidingDataFlags);
     bool gnssSetPositionMode(HybrisGnssPositionMode mode, HybrisGnssPositionRecurrence recurrence,
                                         uint32_t minIntervalMs, uint32_t preferredAccuracyMeters,

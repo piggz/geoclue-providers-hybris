@@ -1,7 +1,7 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Copyright (C) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 Jolla Ltd.
+    Copyright (c) 2018 Matti Lehtimäki <matti.lehtimaki@gmail.com>
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -34,6 +34,18 @@ enum class GnssConstellationType : guint8 {
     QZSS = 4,
     BEIDOU = 5,
     GALILEO = 6,
+};
+
+
+enum class GnssAidlConstellationType : gint32 {
+    UNKNOWN = 0,
+    GPS = 1,
+    SBAS = 2,
+    GLONASS = 3,
+    QZSS = 4,
+    BEIDOU = 5,
+    GALILEO = 6,
+    IRNSS = 7,
 };
 
 enum class GnssLocationFlags : guint16 {
@@ -92,6 +104,31 @@ G_STATIC_ASSERT(sizeof(GnssSvStatus) == 1540);
 
 typedef uint8_t AGnssType;
 typedef uint8_t AGnssStatusValue;
+
+typedef struct gnss_aidl_location {
+    gint32 gnssLocationFlags;
+    gdouble latitudeDegrees;
+    gdouble longitudeDegrees;
+    gdouble altitudeMeters;
+    gdouble speedMetersPerSec;
+    gdouble bearingDegrees;
+    gdouble horizontalAccuracyMeters;
+    gdouble verticalAccuracyMeters;
+    gdouble speedAccuracyMetersPerSecond;
+    gdouble bearingAccuracyDegrees;
+    gint64 timestamp;
+} GnssAidlLocation;
+
+typedef struct gnss_aidl_sv_info {
+    gint32 svid;
+    GnssAidlConstellationType constellation;
+    gfloat cN0Dbhz;
+    gfloat basebandCN0DbHz;
+    gfloat elevationDegrees;
+    gfloat azimuthDegrees;
+    gint64 carrierFrequencyHz;
+    gint32 svFlag;
+} GnssAidlSvInfo;
 
 enum {
     HYBRIS_GNSS_STATUS_NONE = 0,

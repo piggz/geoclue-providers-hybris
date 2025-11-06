@@ -1,6 +1,6 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 - 2022 Jolla Ltd.
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -538,8 +538,9 @@ void HalLocationBackend::gnssCleanup()
         m_gpsDevice->common.close(reinterpret_cast<hw_device_t *>(m_gpsDevice));
 }
 
-bool HalLocationBackend::gnssInjectLocation(double latitudeDegrees, double longitudeDegrees, float accuracyMeters)
+bool HalLocationBackend::gnssInjectLocation(int timestamp, double latitudeDegrees, double longitudeDegrees, float accuracyMeters)
 {
+    Q_UNUSED(timestamp)
     if (m_gps) {
         int error = m_gps->inject_location(latitudeDegrees, longitudeDegrees, accuracyMeters);
         if (error) {

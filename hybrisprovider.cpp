@@ -1,6 +1,6 @@
 /*
-    Copyright (C) 2015 Jolla Ltd.
-    Contact: Aaron McCarthy <aaron.mccarthy@jollamobile.com>
+    Copyright (c) 2015 - 2024 Jolla Ltd.
+    Copyright (c) 2025 Jolla Mobile Ltd
 
     This file is part of geoclue-hybris.
 
@@ -566,7 +566,6 @@ void HybrisProvider::locationEnabledChanged()
 void HybrisProvider::injectPosition(int fields, int timestamp, double latitude, double longitude,
                                     double altitude, const Accuracy &accuracy)
 {
-    Q_UNUSED(timestamp)
     Q_UNUSED(altitude)
 
     PositionFields positionFields = static_cast<PositionFields>(fields);
@@ -576,7 +575,7 @@ void HybrisProvider::injectPosition(int fields, int timestamp, double latitude, 
     qCDebug(lcGeoclueHybris) << "Injecting position" << fields << timestamp << latitude << longitude << altitude
                              << accuracy.horizontal() << accuracy.vertical();
 
-    m_backend->gnssInjectLocation(latitude, longitude, accuracy.horizontal());
+    m_backend->gnssInjectLocation(timestamp, latitude, longitude, accuracy.horizontal());
 }
 
 void HybrisProvider::injectUtcTime()
