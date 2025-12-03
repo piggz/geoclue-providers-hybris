@@ -18,6 +18,14 @@
 
 #define ALIGNED(x) __attribute__ ((aligned(x)))
 
+typedef enum gnss_interface {
+    GNSS_INTERFACE_1_0,
+    GNSS_INTERFACE_1_1,
+    GNSS_INTERFACE_2_0,
+    GNSS_INTERFACE_2_1,
+    GNSS_INTERFACE_COUNT
+} GnssInterface;
+
 typedef struct geoclue_binder_gnss GeoclueBinderGnss;
 
 typedef enum gnss_max {
@@ -27,17 +35,6 @@ typedef enum gnss_max {
 typedef int64_t GnssUtcTime;
 
 enum class GnssConstellationType : guint8 {
-    UNKNOWN = 0,
-    GPS = 1,
-    SBAS = 2,
-    GLONASS = 3,
-    QZSS = 4,
-    BEIDOU = 5,
-    GALILEO = 6,
-};
-
-
-enum class GnssAidlConstellationType : gint32 {
     UNKNOWN = 0,
     GPS = 1,
     SBAS = 2,
@@ -83,6 +80,19 @@ typedef struct gnss_location {
 
 G_STATIC_ASSERT(sizeof(GnssLocation) == 64);
 
+typedef struct gnss_elapsed_realtime {
+    uint16_t flags ALIGNED(2);
+    uint64_t timestampNs ALIGNED(8);
+    uint64_t timeUncertaintyNs ALIGNED(8);
+} ALIGNED(8) GnssElapsedRealtime;
+
+typedef struct gnss_location_2_0 {
+    GnssLocation v1_0 ALIGNED(8);
+    GnssElapsedRealtime elapsedRealtime ALIGNED(8);
+} ALIGNED(8) GnssLocation_2_0;
+
+G_STATIC_ASSERT(sizeof(GnssLocation_2_0) == 88);
+
 typedef struct gnss_sv_info {
     gint16 svid ALIGNED(2);
     GnssConstellationType constellation ALIGNED(1);
@@ -101,6 +111,32 @@ typedef struct gnss_sv_status {
 } ALIGNED(4) GnssSvStatus;
 
 G_STATIC_ASSERT(sizeof(GnssSvStatus) == 1540);
+
+typedef struct gnss_sv_info_2_0 {
+    GnssSvInfo v1_0 ALIGNED(4);
+    GnssConstellationType constellation ALIGNED(1);
+} ALIGNED(4) GnssSvInfo_2_0;
+
+G_STATIC_ASSERT(sizeof(GnssSvInfo_2_0) == 28);
+
+typedef struct gnss_sv_status_2_0 {
+    GBinderHidlVec gnssSvList ALIGNED(4); /* GnssSvInfo_2_0 */
+} ALIGNED(4) GnssSvStatus_2_0;
+
+G_STATIC_ASSERT(sizeof(GnssSvStatus_2_0) == 16);
+
+typedef struct gnss_sv_info_2_1 {
+    GnssSvInfo_2_0 v2_0 ALIGNED(4);
+    gdouble basebandCN0DbHz ALIGNED(8);
+} ALIGNED(4) GnssSvInfo_2_1;
+
+G_STATIC_ASSERT(sizeof(GnssSvInfo_2_1) == 40);
+
+typedef struct gnss_sv_status_2_1 {
+    GBinderHidlVec gnssSvList ALIGNED(4); /* GnssSvInfo_2_1 */
+} ALIGNED(4) GnssSvStatus_2_1;
+
+G_STATIC_ASSERT(sizeof(GnssSvStatus_2_1) == 16);
 
 typedef uint8_t AGnssType;
 typedef uint8_t AGnssStatusValue;
@@ -121,7 +157,7 @@ typedef struct gnss_aidl_location {
 
 typedef struct gnss_aidl_sv_info {
     gint32 svid;
-    GnssAidlConstellationType constellation;
+    GnssConstellationType constellation;
     gfloat cN0Dbhz;
     gfloat basebandCN0DbHz;
     gfloat elevationDegrees;

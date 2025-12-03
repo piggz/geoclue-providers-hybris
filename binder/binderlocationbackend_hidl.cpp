@@ -37,7 +37,27 @@ enum GnssFunctions {
     GNSS_GET_EXTENSION_XTRA = 15,
     GNSS_GET_EXTENSION_GNSS_CONFIGURATION = 16,
     GNSS_GET_EXTENSION_GNSS_DEBUG = 17,
-    GNSS_GET_EXTENSION_GNSS_BATCHING = 18
+    GNSS_GET_EXTENSION_GNSS_BATCHING = 18,
+    GNSS_SET_CALLBACK_1_1 = 19,
+    GNSS_SET_POSITION_MODE_1_1 = 20,
+    GNSS_GET_EXTENSION_GNSS_CONFIGURATION_1_1 = 21,
+    GNSS_GET_EXTENSION_GNSS_MEASUREMENT_1_1 = 22,
+    GNSS_INJECT_BEST_LOCATION = 23,
+    GNSS_SET_CALLBACK_2_0 = 24,
+    GNSS_GET_EXTENSION_GNSS_CONFIGURATION_2_0 = 25,
+    GNSS_GET_EXTENSION_GNSS_DEBUG_2_0 = 26,
+    GNSS_GET_EXTENSION_AGNSS_2_0 = 27,
+    GNSS_GET_EXTENSION_AGNSS_RIL_2_0 = 28,
+    GNSS_GET_EXTENSION_GNSS_MEASUREMENT_2_0 = 29,
+    GNSS_GET_EXTENSION_GNSS_MEASUREMENT_CORRECTIONS = 30,
+    GNSS_GET_EXTENSION_GNSS_VISIBILITY_CONTROL = 31,
+    GNSS_GET_EXTENSION_GNSS_BATCHING_2_0 = 32,
+    GNSS_INJECT_BEST_LOCATION_2_0 = 33,
+    GNSS_SET_CALLBACK_2_1 = 34,
+    GNSS_GET_EXTENSION_GNSS_MEASUREMENT_2_1 = 35,
+    GNSS_GET_EXTENSION_GNSS_CONFIGURATION_2_1 = 36,
+    GNSS_GET_EXTENSION_GNSS_MEASUREMENT_CORRECTIONS_2_1 = 37,
+    GNSS_GET_EXTENSION_GNSS_ANTENNA_INFO = 38
 };
 
 enum GnssCallbacks {
@@ -49,11 +69,20 @@ enum GnssCallbacks {
     GNSS_ACQUIRE_WAKELOCK_CB = 6,
     GNSS_RELEASE_WAKELOCK_CB = 7,
     GNSS_REQUEST_TIME_CB = 8,
-    GNSS_SET_SYSTEM_INFO_CB = 9
+    GNSS_SET_SYSTEM_INFO_CB = 9,
+    GNSS_NAME_CB = 10,
+    GNSS_REQUEST_LOCATION_CB = 11,
+    GNSS_SET_CAPABILITIES_CB_2_0 = 12,
+    GNSS_LOCATION_CB_2_0 = 13,
+    GNSS_REQUEST_LOCATION_CB_2_0 = 14,
+    GNSS_SV_STATUS_CB_2_0 = 15,
+    GNSS_SET_CAPABILITIES_CB_2_1 = 16,
+    GNSS_SV_STATUS_CB_2_1 = 17,
 };
 
 enum GnssDebugFunctions {
-    GNSS_DEBUG_GET_DEBUG_DATA = 1
+    GNSS_DEBUG_GET_DEBUG_DATA = 1,
+    GNSS_DEBUG_GET_DEBUG_DATA_2_0 = 2
 };
 
 enum GnssNiFunctions {
@@ -87,18 +116,24 @@ enum AGnssCallbacks {
     AGNSS_STATUS_IP_V6_CB = 2
 };
 
+enum AGnssCallbacks_2_0 {
+    AGNSS_STATUS_CB = 1
+};
+
 enum AGnssRilFunctions {
     AGNSS_RIL_SET_CALLBACK = 1,
     AGNSS_RIL_SET_REF_LOCATION = 2,
     AGNSS_RIL_SET_ID = 3,
     AGNSS_RIL_UPDATE_NETWORK_STATE = 4,
-    AGNSS_RIL_UPDATE_NETWORK_AVAILABILITY = 5
+    AGNSS_RIL_UPDATE_NETWORK_AVAILABILITY = 5,
+    AGNSS_RIL_UPDATE_NETWORK_STATE_2_0 = 6
 };
 
 enum AGnssRilCallbacks {
     AGNSS_RIL_REQUEST_REF_ID_CB = 1,
     AGNSS_RIL_REQUEST_REF_LOC_CB = 2
 };
+
 
 #define GNSS_IFACE(x)       "android.hardware.gnss@1.0::" x
 #define GNSS_REMOTE         GNSS_IFACE("IGnss")
@@ -113,6 +148,52 @@ enum AGnssRilCallbacks {
 #define AGNSS_RIL_REMOTE    GNSS_IFACE("IAGnssRil")
 #define AGNSS_RIL_CALLBACK  GNSS_IFACE("IAGnssRilCallback")
 
+#define GNSS_IFACE_1_1(x)      "android.hardware.gnss@1.1::" x
+#define GNSS_REMOTE_1_1        GNSS_IFACE_1_1("IGnss")
+#define GNSS_CALLBACK_1_1      GNSS_IFACE_1_1("IGnssCallback")
+
+#define GNSS_IFACE_2_0(x)      "android.hardware.gnss@2.0::" x
+#define GNSS_REMOTE_2_0        GNSS_IFACE_2_0("IGnss")
+#define GNSS_CALLBACK_2_0      GNSS_IFACE_2_0("IGnssCallback")
+#define GNSS_DEBUG_REMOTE_2_0  GNSS_IFACE_2_0("IGnssDebug")
+#define AGNSS_REMOTE_2_0       GNSS_IFACE_2_0("IAGnss")
+#define AGNSS_CALLBACK_2_0     GNSS_IFACE_2_0("IAGnssCallback")
+#define AGNSS_RIL_REMOTE_2_0   GNSS_IFACE_2_0("IAGnssRil")
+
+#define GNSS_IFACE_2_1(x)      "android.hardware.gnss@2.1::" x
+#define GNSS_REMOTE_2_1        GNSS_IFACE_2_1("IGnss")
+#define GNSS_CALLBACK_2_1      GNSS_IFACE_2_1("IGnssCallback")
+
+static const GBinderClientIfaceInfo gnss_client_ifaces[] = {
+    {GNSS_REMOTE_2_1, GNSS_GET_EXTENSION_GNSS_ANTENNA_INFO },
+    {GNSS_REMOTE_2_0, GNSS_INJECT_BEST_LOCATION_2_0 },
+    {GNSS_REMOTE_1_1, GNSS_INJECT_BEST_LOCATION },
+    {GNSS_REMOTE, GNSS_GET_EXTENSION_GNSS_BATCHING },
+};
+
+const char* const gnss_callback_ifaces[] = {
+    GNSS_CALLBACK_2_1,
+    GNSS_CALLBACK_2_0,
+    GNSS_CALLBACK_1_1,
+    GNSS_CALLBACK,
+    NULL
+};
+
+static const GBinderClientIfaceInfo gnss_debug_client_ifaces[] = {
+    {GNSS_DEBUG_REMOTE_2_0, GNSS_DEBUG_GET_DEBUG_DATA_2_0 },
+    {GNSS_DEBUG_REMOTE, GNSS_DEBUG_GET_DEBUG_DATA },
+};
+
+const char* const agnss_callback_ifaces[] = {
+    AGNSS_CALLBACK_2_0,
+    AGNSS_CALLBACK,
+    NULL
+};
+
+static const GBinderClientIfaceInfo agnss_ril_client_ifaces[] = {
+    {AGNSS_RIL_REMOTE_2_0, AGNSS_RIL_UPDATE_NETWORK_STATE_2_0 },
+    {AGNSS_RIL_REMOTE, AGNSS_RIL_UPDATE_NETWORK_STATE },
+};
 
 /*==========================================================================*
  * Implementation
@@ -135,16 +216,27 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
     Q_UNUSED(user_data)
     const char *iface = gbinder_remote_request_interface(req);
 
-    if (!g_strcmp0(iface, GNSS_CALLBACK)) {
+    if (!g_strcmp0(iface, GNSS_CALLBACK)
+        || !g_strcmp0(iface, GNSS_CALLBACK_1_1)
+        || !g_strcmp0(iface, GNSS_CALLBACK_2_0)
+        || !g_strcmp0(iface, GNSS_CALLBACK_2_1)) {
         GBinderReader reader;
         gbinder_remote_request_init_reader(req, &reader);
         switch (code) {
         case GNSS_LOCATION_CB:
+        case GNSS_LOCATION_CB_2_0:
             {
             Location loc;
-
-            const GnssLocation *location = geoclue_binder_gnss_decode_struct
-                (GnssLocation, &reader);
+            const GnssLocation *location;
+            const GnssLocation_2_0 *location_2_0;
+            if (code == GNSS_LOCATION_CB) {
+                location = geoclue_binder_gnss_decode_struct
+                    (GnssLocation, &reader);
+            } else {
+                location_2_0 = geoclue_binder_gnss_decode_struct
+                    (GnssLocation_2_0, &reader);
+                location = &location_2_0->v1_0;
+            }
 
             loc.setTimestamp(location->timestamp);
 
@@ -192,29 +284,61 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
             }
             break;
         case GNSS_SV_STATUS_CB:
+        case GNSS_SV_STATUS_CB_2_0:
+        case GNSS_SV_STATUS_CB_2_1:
             {
-            const GnssSvStatus *svStatus = geoclue_binder_gnss_decode_struct
-                (GnssSvStatus, &reader);
+            const GnssSvStatus *svStatus;
+            const GnssSvInfo_2_0 *svStatus_2_0;
+            const GnssSvInfo_2_1 *svStatus_2_1;
+            gsize numSvs = 0;
+
+            if (code == GNSS_SV_STATUS_CB_2_1) {
+                gsize elemsize;
+                svStatus_2_1 =
+                    (const GnssSvInfo_2_1 *)gbinder_reader_read_hidl_vec(
+                        &reader, &numSvs, &elemsize);
+            } else if (code == GNSS_SV_STATUS_CB_2_0) {
+                gsize elemsize;
+                svStatus_2_0 =
+                    (const GnssSvInfo_2_0 *)gbinder_reader_read_hidl_vec(
+                        &reader, &numSvs, &elemsize);
+            } else {
+                svStatus = geoclue_binder_gnss_decode_struct
+                    (GnssSvStatus, &reader);
+                numSvs = svStatus->numSvs;
+            }
 
             QList<SatelliteInfo> satellites;
             QList<int> usedPrns;
 
-            for (int i = 0; i < svStatus->numSvs; ++i) {
+            for (unsigned int i = 0; i < numSvs; ++i) {
                 SatelliteInfo satInfo;
-                GnssSvInfo svInfo = svStatus->gnssSvList[i];
+                GnssSvInfo svInfo;
+                GnssConstellationType constellation;
+
+                if (code == GNSS_SV_STATUS_CB_2_1) {
+                    svInfo = svStatus_2_1[i].v2_0.v1_0;
+                    constellation = svStatus_2_1[i].v2_0.constellation;
+                } else if (code == GNSS_SV_STATUS_CB_2_0) {
+                    svInfo = svStatus_2_0[i].v1_0;
+                    constellation = svStatus_2_0[i].constellation;
+                } else {
+                    svInfo = svStatus->gnssSvList[i];
+                    constellation = svInfo.constellation;
+                }
                 satInfo.setSnr(svInfo.cN0Dbhz);
                 satInfo.setElevation(svInfo.elevationDegrees);
                 satInfo.setAzimuth(svInfo.azimuthDegrees);
                 int prn = svInfo.svid;
                 // From https://github.com/barbeau/gpstest
                 // and https://github.com/mvglasow/satstat/wiki/NMEA-IDs
-                if (svInfo.constellation == GnssConstellationType::SBAS) {
+                if (constellation == GnssConstellationType::SBAS) {
                     prn -= 87;
-                } else if (svInfo.constellation == GnssConstellationType::GLONASS) {
+                } else if (constellation == GnssConstellationType::GLONASS) {
                     prn += 64;
-                } else if (svInfo.constellation == GnssConstellationType::BEIDOU) {
+                } else if (constellation == GnssConstellationType::BEIDOU) {
                     prn += 200;
-                } else if (svInfo.constellation == GnssConstellationType::GALILEO) {
+                } else if (constellation == GnssConstellationType::GALILEO) {
                     prn += 300;
                 }
                 satInfo.setPrn(prn);
@@ -242,6 +366,8 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
             }
             break;
         case GNSS_SET_CAPABILITIES_CB:
+        case GNSS_SET_CAPABILITIES_CB_2_0:
+        case GNSS_SET_CAPABILITIES_CB_2_1:
             {
             guint32 capabilities;
             if (gbinder_reader_read_uint32(&reader, &capabilities)) {
@@ -258,6 +384,13 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
             break;
         case GNSS_SET_SYSTEM_INFO_CB:
             qCDebug(lcGeoclueHybris) << "GNSS set system info";
+            break;
+        case GNSS_REQUEST_LOCATION_CB:
+        case GNSS_REQUEST_LOCATION_CB_2_0:
+            qCDebug(lcGeoclueHybris) << "GNSS request location";
+            break;
+        case GNSS_NAME_CB:
+            qCDebug(lcGeoclueHybris) << "GNSS name";
             break;
         default:
             qWarning("Failed to decode callback %u", code);
@@ -364,6 +497,31 @@ GBinderLocalReply *geoclue_binder_agnss_callback(
         }
         *status = GBINDER_STATUS_OK;
         return gbinder_local_reply_append_int32(gbinder_local_object_new_reply(obj), 0);
+    } else if (!g_strcmp0(iface, AGNSS_CALLBACK_2_0)) {
+        GBinderReader reader;
+
+        gbinder_remote_request_init_reader(req, &reader);
+        switch (code) {
+        case AGNSS_STATUS_CB:
+            {
+            guint8 status;
+            guint8 type;
+
+            QHostAddress ipv4;
+            QHostAddress ipv6;
+            QByteArray ssid;
+            QByteArray password;
+
+            gbinder_reader_read_uint8(&reader, &type);
+            gbinder_reader_read_uint8(&reader, &status);
+
+            QMetaObject::invokeMethod(staticProvider, "agpsStatus", Qt::QueuedConnection,
+                                      Q_ARG(qint16, type), Q_ARG(quint16, status),
+                                      Q_ARG(QHostAddress, ipv4), Q_ARG(QHostAddress, ipv6),
+                                      Q_ARG(QByteArray, ssid), Q_ARG(QByteArray, password));
+            }
+            break;
+        }
     } else {
         qWarning("Unknown interface %s and code %u", iface, code);
         *status = GBINDER_STATUS_FAILED;
@@ -457,7 +615,8 @@ void geoclue_binder_gnss_gnss_died(
  *==========================================================================*/
 
 BinderLocationBackendHidl::BinderLocationBackendHidl(QObject *parent)
-:   BinderLocationBackend(parent)
+:   BinderLocationBackend(parent),
+    m_gnssInterface(GNSS_INTERFACE_COUNT)
 {
 }
 
@@ -508,6 +667,56 @@ bool BinderLocationBackendHidl::isReplySuccess(GBinderRemoteReply *reply)
 }
 
 // Gnss
+bool BinderLocationBackendHidl::gnssInitInternal(const char *remote,
+                                                 gint32 set_callback,
+                                                 GnssInterface gnssInterface)
+{
+    bool ret = false;
+
+    int status = 0;
+
+    /* Fetch remote reference from hwservicemanager */
+    m_fqname = g_strconcat(remote, "/default", Q_NULLPTR);
+    m_remoteGnss = gbinder_servicemanager_get_service_sync(m_sm,
+        m_fqname, &status);
+
+    if (m_remoteGnss) {
+        GBinderLocalRequest *req;
+        GBinderRemoteReply *reply;
+
+        /* get_service returns auto-released reference,
+         * we need to add a reference of our own */
+        gbinder_remote_object_ref(m_remoteGnss);
+        m_clientGnss = gbinder_client_new2(m_remoteGnss, gnss_client_ifaces,
+            G_N_ELEMENTS(gnss_client_ifaces));
+        m_death_id = gbinder_remote_object_add_death_handler
+            (m_remoteGnss, geoclue_binder_gnss_gnss_died, this);
+        m_callbackGnss = gbinder_servicemanager_new_local_object2
+            (m_sm, gnss_callback_ifaces,
+             geoclue_binder_gnss_callback, this);
+
+        /* IGnss::setCallback */
+        req = gbinder_client_new_request2(m_clientGnss, set_callback);
+        gbinder_local_request_append_local_object(req, m_callbackGnss);
+        reply = gbinder_client_transact_sync_reply(m_clientGnss,
+            set_callback, req, &status);
+
+        if (!status && isReplySuccess(reply)) {
+            m_gnssInterface = gnssInterface;
+            ret = true;
+        }
+
+        gbinder_local_request_unref(req);
+        gbinder_remote_reply_unref(reply);
+    } else {
+        g_free(m_fqname);
+        m_fqname = Q_NULLPTR;
+    }
+
+    return ret;
+}
+
+// Gnss
 bool BinderLocationBackendHidl::gnssInit()
 {
     bool ret = false;
@@ -516,38 +725,19 @@ bool BinderLocationBackendHidl::gnssInit()
 
     m_sm = gbinder_servicemanager_new(GNSS_BINDER_DEFAULT_DEV);
     if (m_sm) {
-        int status = 0;
-
-        /* Fetch remote reference from hwservicemanager */
-        m_fqname = g_strconcat(GNSS_REMOTE "/default", Q_NULLPTR);
-        m_remoteGnss = gbinder_servicemanager_get_service_sync(m_sm,
-            m_fqname, &status);
-
-        if (m_remoteGnss) {
-            GBinderLocalRequest *req;
-            GBinderRemoteReply *reply;
-
-            /* get_service returns auto-released reference,
-             * we need to add a reference of our own */
-            gbinder_remote_object_ref(m_remoteGnss);
-            m_clientGnss = gbinder_client_new(m_remoteGnss, GNSS_REMOTE);
-            m_death_id = gbinder_remote_object_add_death_handler
-                (m_remoteGnss, geoclue_binder_gnss_gnss_died, this);
-            m_callbackGnss = gbinder_servicemanager_new_local_object
-                (m_sm, GNSS_CALLBACK, geoclue_binder_gnss_callback, this);
-
-            /* IGnss::setCallback */
-            req = gbinder_client_new_request(m_clientGnss);
-            gbinder_local_request_append_local_object(req, m_callbackGnss);
-            reply = gbinder_client_transact_sync_reply(m_clientGnss,
-                GNSS_SET_CALLBACK, req, &status);
-
-            if (!status && isReplySuccess(reply)) {
-                ret = true;
-            }
-
-            gbinder_local_request_unref(req);
-            gbinder_remote_reply_unref(reply);
+        ret = gnssInitInternal(GNSS_REMOTE_2_1,
+            GNSS_SET_CALLBACK_2_1, GNSS_INTERFACE_2_1);
+        if (!ret) {
+            ret = gnssInitInternal(GNSS_REMOTE_2_0,
+                GNSS_SET_CALLBACK_2_0, GNSS_INTERFACE_2_0);
+        }
+        if (!ret) {
+            ret = gnssInitInternal(GNSS_REMOTE_1_1,
+                GNSS_SET_CALLBACK_1_1, GNSS_INTERFACE_1_1);
+        }
+        if (!ret) {
+            ret = gnssInitInternal(GNSS_REMOTE,
+                GNSS_SET_CALLBACK, GNSS_INTERFACE_1_0);
         }
     }
 
@@ -629,7 +819,7 @@ bool BinderLocationBackendHidl::gnssInjectLocation(
         GBinderRemoteReply *reply;
         GBinderWriter writer;
 
-        req = gbinder_client_new_request(m_clientGnss);
+        req = gbinder_client_new_request2(m_clientGnss, GNSS_INJECT_LOCATION);
         gbinder_local_request_init_writer(req, &writer);
         gbinder_writer_append_double(&writer, latitudeDegrees);
         gbinder_writer_append_double(&writer, longitudeDegrees);
@@ -663,7 +853,7 @@ bool BinderLocationBackendHidl::gnssInjectTime(
         GBinderRemoteReply *reply;
         GBinderWriter writer;
 
-        req = gbinder_client_new_request(m_clientGnss);
+        req = gbinder_client_new_request2(m_clientGnss, GNSS_INJECT_TIME);
         gbinder_local_request_init_writer(req, &writer);
         gbinder_writer_append_int64(&writer, timeMs);
         gbinder_writer_append_int64(&writer, timeReferenceMs);
@@ -690,8 +880,7 @@ void BinderLocationBackendHidl::gnssDeleteAidingData(
 {
     if (m_clientGnss) {
         GBinderLocalRequest *req;
-
-        req = gbinder_client_new_request(m_clientGnss);
+        req = gbinder_client_new_request2(m_clientGnss, GNSS_DELETE_AIDING_DATA);
         gbinder_local_request_append_int32(req, aidingDataFlags);
         gbinder_client_transact(m_clientGnss, GNSS_DELETE_AIDING_DATA,
                                 0, req, NULL, NULL, NULL);
@@ -714,16 +903,26 @@ bool BinderLocationBackendHidl::gnssSetPositionMode(
         GBinderLocalRequest *req;
         GBinderRemoteReply *reply = NULL;
         GBinderWriter writer;
+        gint32 code;
 
-        req = gbinder_client_new_request(m_clientGnss);
+        if (m_gnssInterface >= GNSS_INTERFACE_1_1) {
+            code = GNSS_SET_POSITION_MODE_1_1;
+        } else {
+            code = GNSS_SET_POSITION_MODE;
+        }
+
+        req = gbinder_client_new_request2(m_clientGnss, code);
         gbinder_local_request_init_writer(req, &writer);
         gbinder_writer_append_int32(&writer, mode);
         gbinder_writer_append_int32(&writer, recurrence);
         gbinder_writer_append_int32(&writer, minIntervalMs);
         gbinder_writer_append_int32(&writer, preferredAccuracyMeters);
         gbinder_writer_append_int32(&writer, preferredTimeMs);
+        if (m_gnssInterface >= GNSS_INTERFACE_1_1) {
+            gbinder_writer_append_bool(&writer, FALSE);
+        }
         reply = gbinder_client_transact_sync_reply(m_clientGnss,
-            GNSS_SET_POSITION_MODE, req, &status);
+            code, req, &status);
 
         if (!status && isReplySuccess(reply)) {
             ret = true;
@@ -743,15 +942,23 @@ void BinderLocationBackendHidl::gnssDebugInit()
 {
     GBinderRemoteReply *reply;
     int status = 0;
+    gint32 code;
+
+    if (m_gnssInterface >= GNSS_INTERFACE_2_0) {
+        code = GNSS_GET_EXTENSION_GNSS_DEBUG_2_0;
+    } else {
+        code = GNSS_GET_EXTENSION_GNSS_DEBUG;
+    }
 
     reply = gbinder_client_transact_sync_reply(m_clientGnss,
-        GNSS_GET_EXTENSION_GNSS_DEBUG, Q_NULLPTR, &status);
+        code, Q_NULLPTR, &status);
 
     if (!status) {
         m_remoteGnssDebug = getExtensionObject(reply);
         if (m_remoteGnssDebug) {
             qWarning("Initialising GNSS Debug interface");
-            m_clientGnssDebug = gbinder_client_new(m_remoteGnssDebug, GNSS_DEBUG_REMOTE);
+            m_clientGnssDebug = gbinder_client_new2(m_remoteGnssDebug,
+                gnss_debug_client_ifaces, G_N_ELEMENTS(gnss_debug_client_ifaces));
         }
     }
     gbinder_remote_reply_unref(reply);
@@ -892,9 +1099,16 @@ void BinderLocationBackendHidl::aGnssInit()
 {
     GBinderRemoteReply *reply;
     int status = 0;
+    gint32 code;
+
+    if (m_gnssInterface >= GNSS_INTERFACE_2_0) {
+        code = GNSS_GET_EXTENSION_AGNSS_2_0;
+    } else {
+        code = GNSS_GET_EXTENSION_AGNSS;
+    }
 
     reply = gbinder_client_transact_sync_reply(m_clientGnss,
-        GNSS_GET_EXTENSION_AGNSS, Q_NULLPTR, &status);
+        code, Q_NULLPTR, &status);
 
     if (!status) {
         m_remoteAGnss = getExtensionObject(reply);
@@ -902,9 +1116,13 @@ void BinderLocationBackendHidl::aGnssInit()
         if (m_remoteAGnss) {
             qWarning("Initialising AGNSS interface");
             GBinderLocalRequest *req;
-            m_clientAGnss = gbinder_client_new(m_remoteAGnss, AGNSS_REMOTE);
+            m_clientAGnss = gbinder_client_new(m_remoteAGnss,
+                 m_gnssInterface >= GNSS_INTERFACE_2_0
+                     ? AGNSS_REMOTE_2_0 : AGNSS_REMOTE);
             m_callbackAGnss = gbinder_servicemanager_new_local_object
-                (m_sm, AGNSS_CALLBACK, geoclue_binder_agnss_callback, this);
+                (m_sm, m_gnssInterface >= GNSS_INTERFACE_2_0
+                     ? AGNSS_CALLBACK_2_0 : AGNSS_CALLBACK,
+                geoclue_binder_agnss_callback, this);
 
             gbinder_remote_reply_unref(reply);
 
@@ -931,6 +1149,10 @@ bool BinderLocationBackendHidl::aGnssDataConnClosed()
     bool ret = false;
     GBinderRemoteReply *reply;
 
+    if (!m_clientAGnss) {
+        return ret;
+    }
+
     reply = gbinder_client_transact_sync_reply(m_clientAGnss,
         AGNSS_DATA_CONN_CLOSED, Q_NULLPTR, &status);
 
@@ -938,6 +1160,9 @@ bool BinderLocationBackendHidl::aGnssDataConnClosed()
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection closed failed");
+    }
     gbinder_remote_reply_unref(reply);
     return ret;
 }
@@ -948,6 +1173,10 @@ bool BinderLocationBackendHidl::aGnssDataConnFailed()
     bool ret = false;
     GBinderRemoteReply *reply;
 
+    if (!m_clientAGnss) {
+        return ret;
+    }
+
     reply = gbinder_client_transact_sync_reply(m_clientAGnss,
         AGNSS_DATA_CONN_FAILED, Q_NULLPTR, &status);
 
@@ -955,6 +1184,9 @@ bool BinderLocationBackendHidl::aGnssDataConnFailed()
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection failed");
+    }
     gbinder_remote_reply_unref(reply);
     return ret;
 }
@@ -969,9 +1201,16 @@ bool BinderLocationBackendHidl::aGnssDataConnOpen(
     GBinderRemoteReply *reply;
     GBinderWriter writer;
 
+    if (!m_clientAGnss) {
+        return ret;
+    }
+
     req = gbinder_client_new_request(m_clientAGnss);
 
     gbinder_local_request_init_writer(req, &writer);
+    if (m_gnssInterface >= GNSS_INTERFACE_2_0) {
+        gbinder_writer_append_int64(&writer, 0);
+    }
     gbinder_writer_append_hidl_string(&writer, apn.constData());
     gbinder_writer_append_int32(&writer, fromContextProtocol(protocol));
     reply = gbinder_client_transact_sync_reply(m_clientAGnss,
@@ -981,6 +1220,9 @@ bool BinderLocationBackendHidl::aGnssDataConnOpen(
         ret = true;
     }
 
+    if (!ret) {
+        qWarning("AGNSS data connection open failed");
+    }
     gbinder_local_request_unref(req);
     gbinder_remote_reply_unref(reply);
 
@@ -997,6 +1239,10 @@ int BinderLocationBackendHidl::aGnssSetServer(
     GBinderLocalRequest *req;
     GBinderRemoteReply *reply;
     GBinderWriter writer;
+
+    if (!m_clientAGnss) {
+        return ret;
+    }
 
     req = gbinder_client_new_request(m_clientAGnss);
 
@@ -1022,9 +1268,16 @@ void BinderLocationBackendHidl::aGnssRilInit()
 {
     GBinderRemoteReply *reply;
     int status = 0;
+    gint32 code;
+
+    if (m_gnssInterface >= GNSS_INTERFACE_2_0) {
+        code = GNSS_GET_EXTENSION_AGNSS_RIL_2_0;
+    } else {
+        code = GNSS_GET_EXTENSION_AGNSS_RIL;
+    }
 
     reply = gbinder_client_transact_sync_reply(m_clientGnss,
-        GNSS_GET_EXTENSION_AGNSS_RIL, Q_NULLPTR, &status);
+        code, Q_NULLPTR, &status);
 
     if (!status) {
         m_remoteAGnssRil = getExtensionObject(reply);
@@ -1032,7 +1285,8 @@ void BinderLocationBackendHidl::aGnssRilInit()
         if (m_remoteAGnssRil) {
             qWarning("Initialising AGNSS RIL interface");
             GBinderLocalRequest *req;
-            m_clientAGnssRil = gbinder_client_new(m_remoteAGnssRil, AGNSS_RIL_REMOTE);
+            m_clientAGnssRil = gbinder_client_new2(m_remoteAGnssRil,
+                agnss_ril_client_ifaces, G_N_ELEMENTS(agnss_ril_client_ifaces));
             m_callbackAGnssRil = gbinder_servicemanager_new_local_object
                 (m_sm, AGNSS_RIL_CALLBACK, geoclue_binder_agnss_ril_callback, this);
 
