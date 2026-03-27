@@ -45,7 +45,7 @@ Q_LOGGING_CATEGORY(lcGeoclueHybris, "geoclue.provider.hybris")
 Q_LOGGING_CATEGORY(lcGeoclueHybrisNmea, "geoclue.provider.hybris.nmea")
 Q_LOGGING_CATEGORY(lcGeoclueHybrisPosition, "geoclue.provider.hybris.position")
 
-HybrisProvider *staticProvider = Q_NULLPTR;
+HybrisProvider *staticProvider = nullptr;
 
 // Some older devices have the GPS week number rollover bug
 // which breaks timestamps so workaround it using a constant offset
@@ -147,14 +147,14 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QList<SatelliteIn
 }
 
 HybrisProvider::HybrisProvider(QObject *parent)
-:   QObject(parent), m_backend(Q_NULLPTR),
-    m_status(StatusUnavailable), m_positionInjectionConnected(false), m_xtraDownloadReply(Q_NULLPTR), m_xtraServerIndex(0),
-    m_requestedConnect(false), m_gpsStarted(false), m_locationSettings(Q_NULLPTR),
-    m_networkManager(new NetworkManager(this)), m_cellularTechnology(Q_NULLPTR),
-    m_ofonoExtModemManager(new QOfonoExtModemManager(this)),
-    m_connectionManager(new QOfonoConnectionManager(this)), m_connectionContext(Q_NULLPTR), m_ntpSocket(Q_NULLPTR),
-    m_agpsEnabled(false), m_agpsOnlineEnabled(false), m_useForcedNtpInject(false), m_useForcedXtraInject(false),
-    m_suplPort(0)
+    : QObject(parent), m_backend(nullptr),
+      m_status(StatusUnavailable), m_positionInjectionConnected(false), m_xtraDownloadReply(nullptr), m_xtraServerIndex(0),
+      m_requestedConnect(false), m_gpsStarted(false), m_locationSettings(nullptr),
+      m_networkManager(new NetworkManager(this)), m_cellularTechnology(nullptr),
+      m_ofonoExtModemManager(new QOfonoExtModemManager(this)),
+      m_connectionManager(new QOfonoConnectionManager(this)), m_connectionContext(nullptr), m_ntpSocket(nullptr),
+      m_agpsEnabled(false), m_agpsOnlineEnabled(false), m_useForcedNtpInject(false), m_useForcedXtraInject(false),
+      m_suplPort(0)
 {
     if (staticProvider)
         qFatal("Only a single instance of HybrisProvider is supported.");
@@ -271,7 +271,7 @@ HybrisProvider::~HybrisProvider()
     }
 
     if (staticProvider == this)
-        staticProvider = 0;
+        staticProvider = nullptr;
 }
 
 void HybrisProvider::loadDefaultsFromConfigurationFile()
@@ -758,7 +758,7 @@ void HybrisProvider::xtraDownloadFinished()
         qCDebug(lcGeoclueHybris) << "Error:" << m_xtraDownloadReply->error()
                                  << m_xtraDownloadReply->errorString();
 
-        m_xtraDownloadReply = 0;
+        m_xtraDownloadReply = nullptr;
 
         // Try next server
         xtraDownloadRequestSendNext();
@@ -768,7 +768,7 @@ void HybrisProvider::xtraDownloadFinished()
 
         qCDebug(lcGeoclueHybris) << "injected " << xtraData.length() << " bytes of xtra data";
 
-        m_xtraDownloadReply = 0;
+        m_xtraDownloadReply = nullptr;
     }
 }
 
@@ -960,7 +960,7 @@ void HybrisProvider::connectionContextValidChanged()
 
         m_agpsInterface.clear();
         m_connectionContext->deleteLater();
-        m_connectionContext = 0;
+        m_connectionContext = nullptr;
 
         m_backend->aGnssDataConnOpen(apn.constData(), protocol);
     } else {
@@ -1241,7 +1241,7 @@ void HybrisProvider::processNextConnectionContext()
 
         m_agpsInterface.clear();
         delete m_connectionContext;
-        m_connectionContext = 0;
+        m_connectionContext = nullptr;
 
         m_backend->aGnssDataConnFailed();
 
