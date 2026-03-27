@@ -69,6 +69,7 @@ void gnssXtraDownloadRequest()
 {
     QMetaObject::invokeMethod(staticProvider, "xtraDownloadRequest", Qt::QueuedConnection);
 }
+
 }
 
 QDBusArgument &operator<<(QDBusArgument &argument, const Accuracy &accuracy)
@@ -618,14 +619,16 @@ struct NtpTime {
     quint32 seconds;
     quint32 fraction;
 
-    void set(const timeval &time) {
+    void set(const timeval &time)
+    {
         // seconds since 1900
         seconds = qToBigEndian<quint32>(time.tv_sec + SECONDS_FROM_1900_TO_1970);
         // fraction of a second
         fraction = qToBigEndian<quint32>(time.tv_usec * 1000);
     }
 
-    qint64 toMSecsSinceEpoc() const {
+    qint64 toMSecsSinceEpoc() const
+    {
         qint64 msec = qint64(qFromBigEndian<quint32>(seconds) - SECONDS_FROM_1900_TO_1970) * 1000 +
                       1000 * qFromBigEndian<quint32>(fraction) / std::numeric_limits<quint32>::max();
         return msec;
@@ -805,9 +808,7 @@ void HybrisProvider::agpsStatus(qint16 type, quint16 status, const QHostAddress 
         stopDataConnection();
         break;
     case HYBRIS_GNSS_AGNSS_DATA_CONNECTED:
-        break;
     case HYBRIS_GNSS_AGNSS_DATA_CONN_DONE:
-        break;
     case HYBRIS_GNSS_AGNSS_DATA_CONN_FAILED:
         break;
     default:
@@ -951,8 +952,8 @@ void HybrisProvider::connectionContextValidChanged()
     if (!m_agpsOnlineEnabled)
         return;
 
-    if (m_connectionContext->isValid() &&
-        m_connectionContext->settings().value(QStringLiteral("Interface")) == m_agpsInterface) {
+    if (m_connectionContext->isValid()
+            && m_connectionContext->settings().value(QStringLiteral("Interface")) == m_agpsInterface) {
         const QByteArray apn = m_connectionContext->accessPointName().toLocal8Bit();
         const QString protocol = m_connectionContext->protocol();
 
@@ -1029,8 +1030,8 @@ void HybrisProvider::startPositioningIfNeeded()
     if (!m_backend)
         return;
 
-    // Listen to all PositionChanged signals from org.freedesktop.Geoclue.Position interfaces. Used
-    // to inject the current position to achieve a faster fix.
+    // Listen to all PositionChanged signals from org.freedesktop.Geoclue.Position interfaces.
+    // Used to inject the current position to achieve a faster fix.
     if (!m_positionInjectionConnected) {
         QDBusConnection conn = QDBusConnection::sessionBus();
         m_positionInjectionConnected =
@@ -1093,7 +1094,6 @@ void HybrisProvider::stopPositioningIfNeeded()
         setStatus(StatusUnavailable);
     }
     
-
     m_fixLostTimer.stop();
 }
 

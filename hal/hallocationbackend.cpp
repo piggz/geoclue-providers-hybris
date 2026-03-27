@@ -87,7 +87,7 @@ void statusCallback(GpsStatus *status)
         QMetaObject::invokeMethod(staticProvider, "engineOff", Qt::QueuedConnection);
         break;
     default:
-        ;
+        break;
     }
 }
 
