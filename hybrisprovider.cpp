@@ -47,14 +47,14 @@ Q_LOGGING_CATEGORY(lcGeoclueHybrisPosition, "geoclue.provider.hybris.position")
 
 HybrisProvider *staticProvider = nullptr;
 
+namespace
+{
+
 // Some older devices have the GPS week number rollover bug
 // which breaks timestamps so workaround it using a constant offset
 // of 1024 weeks if timestamp is too small
 const HybrisGnssUtcTime GnssWeekRolloverTimestamp = 1554595200000;
 const HybrisGnssUtcTime GnssWeekRolloverTimestampOffset = 619315200000;
-
-namespace
-{
 
 const int QuitIdleTime = 30000;
 const int FixTimeout = 30000;
