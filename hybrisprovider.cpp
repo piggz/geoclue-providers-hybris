@@ -212,7 +212,7 @@ HybrisProvider::HybrisProvider(QObject *parent)
         QString key = QString("xtra/XTRA_SERVER_%1").arg(i);
         QString xtraServer = settings.value(key, QString()).toString();
         if (!xtraServer.isEmpty()) {
-            m_xtraServers.enqueue(xtraServer);
+            m_xtraServers.append(xtraServer);
         }
     }
     if (!m_xtraServers.isEmpty())
@@ -307,7 +307,7 @@ void HybrisProvider::loadDefaultsFromConfigurationFile()
         const QByteArray key = split.at(0).trimmed();
         if (parseXtraServers) {
             if (key == "XTRA_SERVER_1" || key == "XTRA_SERVER_2" || key == "XTRA_SERVER_3")
-                m_xtraServers.enqueue(QUrl::fromEncoded(split.at(1).trimmed()));
+                m_xtraServers.append(QUrl::fromEncoded(split.at(1).trimmed()));
         }
         if (m_suplHost.isEmpty() && key == "SUPL_HOST") {
             m_suplHost = split.at(1).trimmed();
