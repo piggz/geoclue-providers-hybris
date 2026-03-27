@@ -16,11 +16,7 @@
 #include "hybrislocationbackend.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
-#include <QtCore/QBasicTimer>
-#include <QtCore/QQueue>
-#include <QtDBus/QDBusContext>
-#include <QtNetwork/QNetworkReply>
+#include <QtCore/QString>
 
 #include <android-version.h>
 #include <hardware/gps.h>
