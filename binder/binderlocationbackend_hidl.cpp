@@ -287,9 +287,9 @@ GBinderLocalReply *geoclue_binder_gnss_callback(
         case GNSS_SV_STATUS_CB_2_0:
         case GNSS_SV_STATUS_CB_2_1:
             {
-            const GnssSvStatus *svStatus;
-            const GnssSvInfo_2_0 *svStatus_2_0;
-            const GnssSvInfo_2_1 *svStatus_2_1;
+            const GnssSvStatus *svStatus = nullptr;
+            const GnssSvInfo_2_0 *svStatus_2_0 = nullptr;
+            const GnssSvInfo_2_1 *svStatus_2_1 = nullptr;
             gsize numSvs = 0;
 
             if (code == GNSS_SV_STATUS_CB_2_1) {
