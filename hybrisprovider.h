@@ -16,7 +16,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QBasicTimer>
-#include <QtCore/QQueue>
+#include <QtCore/QList>
 #include <QtDBus/QDBusContext>
 #include <QtNetwork/QNetworkReply>
 
@@ -206,7 +206,7 @@ private:
 
     QNetworkAccessManager *m_manager;
     QNetworkReply *m_xtraDownloadReply;
-    QQueue<QUrl> m_xtraServers;
+    QList<QUrl> m_xtraServers;
     int m_xtraServerIndex;
 
     ComJollaConnectiondInterface *m_connectiond;

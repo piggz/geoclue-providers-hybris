@@ -27,7 +27,7 @@ HybrisLocationBackend *getLocationBackend()
     } else if (BinderLocationBackendHidl::isSupported()) {
         return qobject_cast<HybrisLocationBackend *>(new BinderLocationBackendHidl());
     } else {
-        return Q_NULLPTR;
+        return nullptr;
     }
 }
 
@@ -51,7 +51,7 @@ const void *geoclue_binder_gnss_decode_struct1(
     GBinderReader *in,
     guint size)
 {
-    const void *result = Q_NULLPTR;
+    const void *result = nullptr;
     GBinderBuffer *buf = gbinder_reader_read_buffer(in);
 
     if (buf && buf->size == size) {
@@ -128,13 +128,13 @@ void processNmea(gint64 timestamp, const char *nmeaData)
  *==========================================================================*/
 
 BinderLocationBackend::BinderLocationBackend(QObject *parent)
-:   HybrisLocationBackend(parent), m_death_id(0), m_fqname(Q_NULLPTR), m_sm(Q_NULLPTR),
-    m_clientGnss(Q_NULLPTR), m_remoteGnss(Q_NULLPTR), m_callbackGnss(Q_NULLPTR),
-    m_clientGnssDebug(Q_NULLPTR), m_remoteGnssDebug(Q_NULLPTR),
-    m_clientGnssNi(Q_NULLPTR), m_remoteGnssNi(Q_NULLPTR), m_callbackGnssNi(Q_NULLPTR),
-    m_clientGnssXtra(Q_NULLPTR), m_remoteGnssXtra(Q_NULLPTR), m_callbackGnssXtra(Q_NULLPTR),
-    m_clientAGnss(Q_NULLPTR), m_remoteAGnss(Q_NULLPTR), m_callbackAGnss(Q_NULLPTR),
-    m_clientAGnssRil(Q_NULLPTR), m_remoteAGnssRil(Q_NULLPTR), m_callbackAGnssRil(Q_NULLPTR)
+    : HybrisLocationBackend(parent), m_death_id(0), m_fqname(nullptr), m_sm(nullptr),
+      m_clientGnss(nullptr), m_remoteGnss(nullptr), m_callbackGnss(nullptr),
+      m_clientGnssDebug(nullptr), m_remoteGnssDebug(nullptr),
+      m_clientGnssNi(nullptr), m_remoteGnssNi(nullptr), m_callbackGnssNi(nullptr),
+      m_clientGnssXtra(nullptr), m_remoteGnssXtra(nullptr), m_callbackGnssXtra(nullptr),
+      m_clientAGnss(nullptr), m_remoteAGnss(nullptr), m_callbackAGnss(nullptr),
+      m_clientAGnssRil(nullptr), m_remoteAGnssRil(nullptr), m_callbackAGnssRil(nullptr)
 {
 }
 
@@ -147,92 +147,90 @@ void BinderLocationBackend::dropGnss()
 {
     if (m_callbackGnss) {
         gbinder_local_object_drop(m_callbackGnss);
-        m_callbackGnss = Q_NULLPTR;
+        m_callbackGnss = nullptr;
     }
     if (m_clientGnss) {
         gbinder_client_unref(m_clientGnss);
-        m_clientGnss = Q_NULLPTR;
+        m_clientGnss = nullptr;
     }
     if (m_remoteGnss) {
         gbinder_remote_object_remove_handler(m_remoteGnss, m_death_id);
         gbinder_remote_object_unref(m_remoteGnss);
         m_death_id = 0;
-        m_remoteGnss = Q_NULLPTR;
+        m_remoteGnss = nullptr;
     }
     if (m_clientGnssDebug) {
         gbinder_client_unref(m_clientGnssDebug);
-        m_clientGnssDebug = Q_NULLPTR;
+        m_clientGnssDebug = nullptr;
     }
     if (m_remoteGnssDebug) {
         gbinder_remote_object_unref(m_remoteGnssDebug);
-        m_remoteGnssDebug = Q_NULLPTR;
+        m_remoteGnssDebug = nullptr;
     }
     if (m_callbackGnssNi) {
         gbinder_local_object_drop(m_callbackGnssNi);
-        m_callbackGnssNi = Q_NULLPTR;
+        m_callbackGnssNi = nullptr;
     }
     if (m_clientGnssNi) {
         gbinder_client_unref(m_clientGnssNi);
-        m_clientGnssNi = Q_NULLPTR;
+        m_clientGnssNi = nullptr;
     }
     if (m_remoteGnssNi) {
         gbinder_remote_object_unref(m_remoteGnssNi);
-        m_remoteGnssNi = Q_NULLPTR;
+        m_remoteGnssNi = nullptr;
     }
     if (m_callbackGnssXtra) {
         gbinder_local_object_drop(m_callbackGnssXtra);
-        m_callbackGnssXtra = Q_NULLPTR;
+        m_callbackGnssXtra = nullptr;
     }
     if (m_clientGnssXtra) {
         gbinder_client_unref(m_clientGnssXtra);
-        m_clientGnssXtra = Q_NULLPTR;
+        m_clientGnssXtra = nullptr;
     }
     if (m_remoteGnssXtra) {
         gbinder_remote_object_unref(m_remoteGnssXtra);
-        m_remoteGnssXtra = Q_NULLPTR;
+        m_remoteGnssXtra = nullptr;
     }
     if (m_callbackAGnss) {
         gbinder_local_object_drop(m_callbackAGnss);
-        m_callbackAGnss = Q_NULLPTR;
+        m_callbackAGnss = nullptr;
     }
     if (m_clientAGnss) {
         gbinder_client_unref(m_clientAGnss);
-        m_clientAGnss = Q_NULLPTR;
+        m_clientAGnss = nullptr;
     }
     if (m_remoteAGnss) {
         gbinder_remote_object_unref(m_remoteAGnss);
-        m_remoteAGnss = Q_NULLPTR;
+        m_remoteAGnss = nullptr;
     }
     if (m_callbackAGnssRil) {
         gbinder_local_object_drop(m_callbackAGnssRil);
-        m_callbackAGnssRil = Q_NULLPTR;
+        m_callbackAGnssRil = nullptr;
     }
     if (m_clientAGnssRil) {
         gbinder_client_unref(m_clientAGnssRil);
-        m_clientAGnssRil = Q_NULLPTR;
+        m_clientAGnssRil = nullptr;
     }
     if (m_remoteAGnssRil) {
         gbinder_remote_object_unref(m_remoteAGnssRil);
-        m_remoteAGnssRil = Q_NULLPTR;
+        m_remoteAGnssRil = nullptr;
     }
     if (m_sm) {
         gbinder_servicemanager_unref(m_sm);
-        m_sm = Q_NULLPTR;
+        m_sm = nullptr;
     }
 
     g_free(m_fqname);
-    m_fqname = Q_NULLPTR;
+    m_fqname = nullptr;
 }
 
-GBinderRemoteObject *BinderLocationBackend::getExtensionObject(
-    GBinderRemoteReply *reply,
-    bool allowNull)
+GBinderRemoteObject *BinderLocationBackend::getExtensionObject(GBinderRemoteReply *reply, bool allowNull)
 {
     GBinderReader reader;
     gint32 status;
 
     if (!reply) {
-        return NULL;
+        return nullptr;
     }
 
     gbinder_remote_reply_init_reader(reply, &reader);
@@ -241,7 +239,7 @@ GBinderRemoteObject *BinderLocationBackend::getExtensionObject(
         if (!allowNull) {
             qWarning("Failed to get extension object %d", status);
         }
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     return gbinder_reader_read_object(&reader);

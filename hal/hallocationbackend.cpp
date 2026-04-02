@@ -87,7 +87,7 @@ void statusCallback(GpsStatus *status)
         QMetaObject::invokeMethod(staticProvider, "engineOff", Qt::QueuedConnection);
         break;
     default:
-        ;
+        break;
     }
 }
 
@@ -400,7 +400,8 @@ struct GpsXtraCallbacksWrapper {
 };
 
 HalLocationBackend::HalLocationBackend(QObject *parent)
-:   HybrisLocationBackend(parent), m_gps(Q_NULLPTR), m_agps(Q_NULLPTR), m_agpsril(Q_NULLPTR), m_gpsni(Q_NULLPTR), m_xtra(Q_NULLPTR), m_debug(Q_NULLPTR)
+    : HybrisLocationBackend(parent), m_gps(nullptr), m_agps(nullptr), m_agpsril(nullptr)
+    , m_gpsni(nullptr), m_xtra(nullptr), m_debug(nullptr)
 {
     uid_t realUid;
     uid_t effectiveUid;

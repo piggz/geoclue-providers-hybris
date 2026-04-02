@@ -45,16 +45,16 @@ Q_LOGGING_CATEGORY(lcGeoclueHybris, "geoclue.provider.hybris")
 Q_LOGGING_CATEGORY(lcGeoclueHybrisNmea, "geoclue.provider.hybris.nmea")
 Q_LOGGING_CATEGORY(lcGeoclueHybrisPosition, "geoclue.provider.hybris.position")
 
-HybrisProvider *staticProvider = Q_NULLPTR;
+HybrisProvider *staticProvider = nullptr;
+
+namespace
+{
 
 // Some older devices have the GPS week number rollover bug
 // which breaks timestamps so workaround it using a constant offset
 // of 1024 weeks if timestamp is too small
 const HybrisGnssUtcTime GnssWeekRolloverTimestamp = 1554595200000;
 const HybrisGnssUtcTime GnssWeekRolloverTimestampOffset = 619315200000;
-
-namespace
-{
 
 const int QuitIdleTime = 30000;
 const int FixTimeout = 30000;
@@ -69,6 +69,7 @@ void gnssXtraDownloadRequest()
 {
     QMetaObject::invokeMethod(staticProvider, "xtraDownloadRequest", Qt::QueuedConnection);
 }
+
 }
 
 QDBusArgument &operator<<(QDBusArgument &argument, const Accuracy &accuracy)
@@ -147,14 +148,14 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QList<SatelliteIn
 }
 
 HybrisProvider::HybrisProvider(QObject *parent)
-:   QObject(parent), m_backend(Q_NULLPTR),
-    m_status(StatusUnavailable), m_positionInjectionConnected(false), m_xtraDownloadReply(Q_NULLPTR), m_xtraServerIndex(0),
-    m_requestedConnect(false), m_gpsStarted(false), m_locationSettings(Q_NULLPTR),
-    m_networkManager(new NetworkManager(this)), m_cellularTechnology(Q_NULLPTR),
-    m_ofonoExtModemManager(new QOfonoExtModemManager(this)),
-    m_connectionManager(new QOfonoConnectionManager(this)), m_connectionContext(Q_NULLPTR), m_ntpSocket(Q_NULLPTR),
-    m_agpsEnabled(false), m_agpsOnlineEnabled(false), m_useForcedNtpInject(false), m_useForcedXtraInject(false),
-    m_suplPort(0)
+    : QObject(parent), m_backend(nullptr),
+      m_status(StatusUnavailable), m_positionInjectionConnected(false), m_xtraDownloadReply(nullptr), m_xtraServerIndex(0),
+      m_requestedConnect(false), m_gpsStarted(false), m_locationSettings(nullptr),
+      m_networkManager(new NetworkManager(this)), m_cellularTechnology(nullptr),
+      m_ofonoExtModemManager(new QOfonoExtModemManager(this)),
+      m_connectionManager(new QOfonoConnectionManager(this)), m_connectionContext(nullptr), m_ntpSocket(nullptr),
+      m_agpsEnabled(false), m_agpsOnlineEnabled(false), m_useForcedNtpInject(false), m_useForcedXtraInject(false),
+      m_suplPort(0)
 {
     if (staticProvider)
         qFatal("Only a single instance of HybrisProvider is supported.");
@@ -211,7 +212,7 @@ HybrisProvider::HybrisProvider(QObject *parent)
         QString key = QString("xtra/XTRA_SERVER_%1").arg(i);
         QString xtraServer = settings.value(key, QString()).toString();
         if (!xtraServer.isEmpty()) {
-            m_xtraServers.enqueue(xtraServer);
+            m_xtraServers.append(xtraServer);
         }
     }
     if (!m_xtraServers.isEmpty())
@@ -271,7 +272,7 @@ HybrisProvider::~HybrisProvider()
     }
 
     if (staticProvider == this)
-        staticProvider = 0;
+        staticProvider = nullptr;
 }
 
 void HybrisProvider::loadDefaultsFromConfigurationFile()
@@ -306,7 +307,7 @@ void HybrisProvider::loadDefaultsFromConfigurationFile()
         const QByteArray key = split.at(0).trimmed();
         if (parseXtraServers) {
             if (key == "XTRA_SERVER_1" || key == "XTRA_SERVER_2" || key == "XTRA_SERVER_3")
-                m_xtraServers.enqueue(QUrl::fromEncoded(split.at(1).trimmed()));
+                m_xtraServers.append(QUrl::fromEncoded(split.at(1).trimmed()));
         }
         if (m_suplHost.isEmpty() && key == "SUPL_HOST") {
             m_suplHost = split.at(1).trimmed();
@@ -329,11 +330,9 @@ void HybrisProvider::setLocationSettings(LocationSettings *settings)
                 this, &HybrisProvider::locationEnabledChanged);
         connect(m_locationSettings, &LocationSettings::gpsFlightModeChanged,
                 this, &HybrisProvider::locationEnabledChanged);
-        connect(m_locationSettings, &LocationSettings::hereStateChanged,
+        connect(m_locationSettings, &LocationSettings::hybrisEnabledChanged,
                 this, &HybrisProvider::locationEnabledChanged);
-        connect(m_locationSettings, &LocationSettings::mlsEnabledChanged,
-                this, &HybrisProvider::locationEnabledChanged);
-        connect(m_locationSettings, &LocationSettings::mlsOnlineStateChanged,
+        connect(m_locationSettings, &LocationSettings::hybrisOnlineStateChanged,
                 this, &HybrisProvider::locationEnabledChanged);
     }
 }
@@ -618,14 +617,16 @@ struct NtpTime {
     quint32 seconds;
     quint32 fraction;
 
-    void set(const timeval &time) {
+    void set(const timeval &time)
+    {
         // seconds since 1900
         seconds = qToBigEndian<quint32>(time.tv_sec + SECONDS_FROM_1900_TO_1970);
         // fraction of a second
         fraction = qToBigEndian<quint32>(time.tv_usec * 1000);
     }
 
-    qint64 toMSecsSinceEpoc() const {
+    qint64 toMSecsSinceEpoc() const
+    {
         qint64 msec = qint64(qFromBigEndian<quint32>(seconds) - SECONDS_FROM_1900_TO_1970) * 1000 +
                       1000 * qFromBigEndian<quint32>(fraction) / std::numeric_limits<quint32>::max();
         return msec;
@@ -758,7 +759,7 @@ void HybrisProvider::xtraDownloadFinished()
         qCDebug(lcGeoclueHybris) << "Error:" << m_xtraDownloadReply->error()
                                  << m_xtraDownloadReply->errorString();
 
-        m_xtraDownloadReply = 0;
+        m_xtraDownloadReply = nullptr;
 
         // Try next server
         xtraDownloadRequestSendNext();
@@ -768,7 +769,7 @@ void HybrisProvider::xtraDownloadFinished()
 
         qCDebug(lcGeoclueHybris) << "injected " << xtraData.length() << " bytes of xtra data";
 
-        m_xtraDownloadReply = 0;
+        m_xtraDownloadReply = nullptr;
     }
 }
 
@@ -805,9 +806,7 @@ void HybrisProvider::agpsStatus(qint16 type, quint16 status, const QHostAddress 
         stopDataConnection();
         break;
     case HYBRIS_GNSS_AGNSS_DATA_CONNECTED:
-        break;
     case HYBRIS_GNSS_AGNSS_DATA_CONN_DONE:
-        break;
     case HYBRIS_GNSS_AGNSS_DATA_CONN_FAILED:
         break;
     default:
@@ -951,8 +950,8 @@ void HybrisProvider::connectionContextValidChanged()
     if (!m_agpsOnlineEnabled)
         return;
 
-    if (m_connectionContext->isValid() &&
-        m_connectionContext->settings().value(QStringLiteral("Interface")) == m_agpsInterface) {
+    if (m_connectionContext->isValid()
+            && m_connectionContext->settings().value(QStringLiteral("Interface")) == m_agpsInterface) {
         const QByteArray apn = m_connectionContext->accessPointName().toLocal8Bit();
         const QString protocol = m_connectionContext->protocol();
 
@@ -960,7 +959,7 @@ void HybrisProvider::connectionContextValidChanged()
 
         m_agpsInterface.clear();
         m_connectionContext->deleteLater();
-        m_connectionContext = 0;
+        m_connectionContext = nullptr;
 
         m_backend->aGnssDataConnOpen(apn.constData(), protocol);
     } else {
@@ -1029,8 +1028,8 @@ void HybrisProvider::startPositioningIfNeeded()
     if (!m_backend)
         return;
 
-    // Listen to all PositionChanged signals from org.freedesktop.Geoclue.Position interfaces. Used
-    // to inject the current position to achieve a faster fix.
+    // Listen to all PositionChanged signals from org.freedesktop.Geoclue.Position interfaces.
+    // Used to inject the current position to achieve a faster fix.
     if (!m_positionInjectionConnected) {
         QDBusConnection conn = QDBusConnection::sessionBus();
         m_positionInjectionConnected =
@@ -1093,7 +1092,6 @@ void HybrisProvider::stopPositioningIfNeeded()
         setStatus(StatusUnavailable);
     }
     
-
     m_fixLostTimer.stop();
 }
 
@@ -1111,18 +1109,14 @@ void HybrisProvider::setStatus(HybrisProvider::Status status)
 */
 bool HybrisProvider::positioningEnabled()
 {
-    // Hybris AGPS mode doesn't have its own settings at the moment, so enabling if something related is
-    m_agpsEnabled = (m_locationSettings->hereAvailable() && m_locationSettings->hereState() == LocationSettings::OnlineAGpsEnabled)
-                 || (m_locationSettings->mlsAvailable()  && m_locationSettings->mlsEnabled());
-    m_agpsOnlineEnabled = (m_locationSettings->hereAvailable() && m_locationSettings->hereState() == LocationSettings::OnlineAGpsEnabled)
-                       || (m_locationSettings->mlsAvailable()  && m_locationSettings->mlsOnlineState() == LocationSettings::OnlineAGpsEnabled);
+    m_agpsEnabled = m_locationSettings->hybrisEnabled();
+    m_agpsOnlineEnabled = m_locationSettings->hybrisOnlineState() == LocationSettings::OnlineAGpsEnabled;
 
     // enable GPS positioning if location and the GPS are enabled, and the GPS is not in flight mode - if it is allowed by MDM.
     return m_locationSettings->locationEnabled()
-       &&  m_locationSettings->gpsAvailable()
-       &&  m_locationSettings->gpsEnabled()
-       && !m_locationSettings->gpsFlightMode()
-       && (m_locationSettings->allowedDataSources() & LocationSettings::GpsData);
+            && m_locationSettings->gpsEnabled()
+            && !m_locationSettings->gpsFlightMode()
+            && (m_locationSettings->allowedDataSources() & LocationSettings::GpsData);
 }
 
 quint32 HybrisProvider::minimumRequestedUpdateInterval() const
@@ -1241,7 +1235,7 @@ void HybrisProvider::processNextConnectionContext()
 
         m_agpsInterface.clear();
         delete m_connectionContext;
-        m_connectionContext = 0;
+        m_connectionContext = nullptr;
 
         m_backend->aGnssDataConnFailed();
 
